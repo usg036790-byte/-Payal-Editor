@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payal Editor</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#10101a;color:white;font-family:Arial,sans-serif}
+header{padding:22px;background:#191929;text-align:center}
+header h1{margin:0;color:#ff65a7;font-size:30px}
+header p{color:#aaa;margin-bottom:0}
+nav{display:flex;gap:8px;padding:12px}
+button,.upload{background:#ff65a7;color:#180d16;border:0;border-radius:12px;padding:12px;font-weight:bold;cursor:pointer}
+nav button{flex:1}
+main{padding:14px}
+.panel{background:#1c1c2d;padding:16px;border-radius:17px;margin-bottom:15px}
+h2{font-size:19px}
+input[type=file]{width:100%;margin:12px 0;color:#ddd}
+.preview{width:100%;max-height:350px;object-fit:contain;background:#08080d;border-radius:12px}
+input[type=range]{width:100%;accent-color:#ff65a7}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.controls button{flex:1}
+select{padding:10px;border-radius:9px;background:#303047;color:white}
+small{color:#aaa}
+.hidden{display:none}
+footer{text-align:center;color:#777;padding:20px}
+</style>
+</head>
+<body>
+<header>
+<h1>♥ PAYAL</h1>
+<p>Video & Photo Studio</p>
+</header>
+
+<nav>
+<button onclick="show('photo')">📸 Photo</button>
+<button onclick="show('video')">🎬 Video</button>
+</nav>
+
+<main>
+<section id="photo" class="panel">
+<h2>📸 Photo Editor</h2>
+<input type="file" id="photoFile" accept="image/*">
+<canvas id="canvas" class="preview"></canvas>
+
+<h3>Filters</h3>
+<select id="filter">
+<option value="none">Original</option>
+<option value="grayscale(1)">Black & White</option>
+<option value="sepia(1)">Vintage</option>
+<option value="brightness(1.3)">Bright</option>
+<option value="contrast(1.4)">High Contrast</option>
+<option value="saturate(1.8)">Vibrant</option>
+</select>
+
+<h3>Brightness</h3>
+<input type="range" id="bright" min="50" max="200" value="100">
+<h3>Contrast</h3>
+<input type="range" id="contrast" min="50" max="200" value="100">
+
+<div class="controls">
+<button onclick="rotate()">↻ Rotate</button>
+<button onclick="savePhoto()">⬇ Save Photo</button>
+</div>
+</section>
+
+<section id="video" class="panel hidden">
+<h2>🎬 Video Editor</h2>
+<input type="file" id="videoFile" accept="video/*">
+<video id="player" class="preview" controls playsinline></video>
+
+<h3>Trim Start (seconds)</h3>
+<input type="range" id="start" min="0" max="100" value="0">
+<p id="startText">Start: 0 seconds</p>
+
+<h3>Trim End (seconds)</h3>
+<input type="range" id="end" min="0" max="100" value="100">
+<p id="endText">End: 0 seconds</p>
+
+<div class="controls">
+<button onclick="playTrim()">▶ Preview Selection</button>
+<button onclick="stopVideo()">■ Stop</button>
+</div>
+
+<h3>🎵 Background Music</h3>
+<input type="file" id="musicFile" accept="audio/*">
+<audio id="music" controls style="width:100%"></audio>
+<small>Music can be previewed separately in this starter version.</small>
+<p><small>Video trimming and final video export are not yet implemented in this version.</small></p>
+</section>
+</main>
+
+<footer>Made with ♥ for Payal</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+let img=new Image(),rotation=0,photoURL=null,videoURL=null;
+
+function show(section){
+$('photo').classList.toggle('hidden',section!=='photo');
+$('video').classList.toggle('hidden',section!=='video');
+}
+
+$('photoFile').onchange=e=>{
+const file=e.target.files[0];
+if(!file)return;
+if(photoURL)URL.revokeObjectURL(photoURL);
+photoURL=URL.createObjectURL(file);
+img.onload=drawPhoto;
+img.src=photoURL;
+};
+
+function drawPhoto(){
+const c=$('canvas'),ctx=c.getContext('2d');
+const scale=Math.min(1200/img.width,1200/img.height,1);
+c.width=img.width*scale;c.height=img.height*scale;
+ctx.save();
+ctx.translate(c.width/2,c.height/2);
+ctx.rotate(rotation*Math.PI/180);
+ctx.filter=getFilter();
+ctx.drawImage(img,-c.width/2,-c.height/2,c.width,c.height);
+ctx.restore();
+}
+function getFilter(){
+return $('filter').value+
+' brightness('+$('bright').value+'%)'+
+' contrast('+$('contrast').value+'%)';
+}
+['filter','bright','contrast'].forEach(id=>{
+$(id).oninput=()=>{if(img.src)drawPhoto()};
+});
+function rotate(){rotation=(rotation+90)%360;drawPhoto()}
+function savePhoto(){
+if(!img.src)return alert('Please select a photo first');
+const a=document.createElement('a');
+a.download='Payal-Edited.png';
+a.href=$('canvas').toDataURL('image/png');
+a.click();
+}
+
+$('videoFile').onchange=e=>{
+const f=e.target.files[0];
+if(!f)return;
+if(videoURL)URL.revokeObjectURL(videoURL);
+videoURL=URL.createObjectURL(f);
+$('player').src=videoURL;
+$('player').onloadedmetadata=()=>{
+const d=$('player').duration;
+$('start').max=d;$('end').max=d;
+$('start').value=0;$('end').value=d;
+updateTimes();
+};
+};
+
+function updateTimes(){
+$('startText').textContent='Start: '+Number($('start').value).toFixed(1)+' seconds';
+$('endText').textContent='End: '+Number($('end').value).toFixed(1)+' seconds';
+}
+$('start').oninput=updateTimes;
+$('end').oninput=updateTimes;
+
+function playTrim(){
+const p=$('player');
+if(!p.src)return alert('Select a video first');
+const start=Number($('start').value);
+const end=Number($('end').value);
+if(start>=end)return alert('End must be after start');
+p.currentTime=start;
+p.play();
+const check=()=>{
+if(p.currentTime>=end){
+p.pause();p.removeEventListener('timeupdate',check);
+}
+};
+p.addEventListener('timeupdate',check);
+}
+function stopVideo(){$('player').pause()}
+
+$('musicFile').onchange=e=>{
+const f=e.target.files[0];
+if(!f)return;
+$('music').src=URL.createObjectURL(f);
+};
+</script>
+</body>
+</html>
+
