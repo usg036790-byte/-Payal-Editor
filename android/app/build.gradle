@@ -30,6 +30,9 @@ repositories {
     }
 }
 
+implementation "androidx.media3:media3-transformer:1.6.1"
+implementation "androidx.media3:media3-effect:1.6.1"
+implementation "androidx.media3:media3-common:1.6.1"
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
