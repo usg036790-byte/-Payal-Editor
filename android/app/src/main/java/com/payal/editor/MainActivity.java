@@ -1,4 +1,4 @@
-jpackage com.payal.editor;
+package com.payal.editor;
 
 import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
@@ -9,8 +9,4 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(VideoEditorPlugin.class);
         super.onCreate(savedInstanceState);
     }
-}package com.payal.editor;
-
-import com.getcapacitor.BridgeActivity;
-
-public class MainActivity extends BridgeActivity {}
+}
