@@ -186,8 +186,45 @@ h2{
 <p class="small">Timeline interface preview – editing tools will be connected next.</p>
 </div>
 
+
+<div id="photoTools" style="display:none;background:#211d29;padding:15px;border:1px solid #65405f;border-radius:15px;margin-top:15px">
+<h3>PHOTO STUDIO</h3>
+<label>Brightness <span id="brightVal">100</span>%</label>
+<input id="bright" type="range" min="0" max="200" value="100" style="display:block;width:100%">
+<label>Contrast <span id="contrastVal">100</span>%</label>
+<input id="contrast" type="range" min="0" max="200" value="100" style="display:block;width:100%">
+<label>Saturation <span id="saturationVal">100</span>%</label>
+<input id="saturation" type="range" min="0" max="200" value="100" style="display:block;width:100%">
+<label>Blur <span id="blurVal">0</span>px</label>
+<input id="blur" type="range" min="0" max="10" value="0" style="display:block;width:100%">
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+<button onclick="photoFilter('none')">Original</button>
+<button onclick="photoFilter('grayscale(1)')">B&W</button>
+<button onclick="photoFilter('sepia(1)')">Sepia</button>
+<button onclick="resetPhoto()">Reset</button>
+</div>
+
+<div style="margin-top:15px">
+<strong>TRANSFORM</strong>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
+<button onclick="rotatePhoto(-90)">↶ Rotate</button>
+<button onclick="rotatePhoto(90)">Rotate ↷</button>
+<button onclick="flipPhoto('h')">↔ Flip H</button>
+<button onclick="flipPhoto('v')">↕ Flip V</button>
+</div>
+<label>Crop Width (%)</label>
+<input id="cropWidth" type="range" min="20" max="100" value="100" style="width:100%">
+<label>Crop Height (%)</label>
+<input id="cropHeight" type="range" min="20" max="100" value="100" style="width:100%">
+</div>
+<input id="overlayText" placeholder="Write text on photo" style="display:block;width:100%;margin-top:14px;padding:12px;border-radius:9px">
+<button onclick="addPhotoText()" style="margin-top:8px">Add Text</button>
+<button onclick="downloadPhoto()" style="margin-top:8px">Save Photo</button>
+<p id="photoStatus" class="small">Choose a photo to start editing.</p>
+</div>
+
 <div class="tools">
-<div class="tool" onclick="toolNotice('Edit / Trim')"><span>✂️</span>Edit</div>
+<div class="tool" onclick="openPhotoTools()"><span>✂️</span>Edit</div>
 <div class="tool" onclick="toolNotice('Audio')"><span>🎵</span>Audio</div>
 <div class="tool" onclick="toolNotice('Text')"><span>T</span>Text</div>
 <div class="tool" onclick="toolNotice('Filters')"><span>🎨</span>Filters</div>
@@ -269,6 +306,109 @@ alert(name+' tool interface will be added in the next development stage.');
 function exportNotice(){
 alert('Video export engine is not connected yet. No video has been exported.');
 }
+
+let activePhotoFilter = 'none';
+let photoRotation=0,photoFlipH=1,photoFlipV=1;
+function openPhotoTools(){
+ if(mediaType !== 'photo'){alert('Select a photo project first.');return;}
+ $('photoTools').style.display='block';
+ $('photoTools').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function applyPhotoAdjustments(){
+ const img=$('previewBox').querySelector('img');
+ if(!img)return;
+ const b=$('bright').value,c=$('contrast').value;
+ const sat=$('saturation').value,bl=$('blur').value;
+ $('brightVal').textContent=b;
+ $('contrastVal').textContent=c;
+ $('saturationVal').textContent=sat;
+ $('blurVal').textContent=bl;
+ img.style.filter=`brightness(${b}%) contrast(${c}%) saturate(${sat}%) blur(${bl}px) ${activePhotoFilter}`;
+ img.style.transform=`rotate(${photoRotation}deg) scale(${photoFlipH},${photoFlipV})`;
+}
+['bright','contrast','saturation','blur'].forEach(id=>$(id).addEventListener('input',applyPhotoAdjustments));
+
+function rotatePhoto(deg){
+ photoRotation=(photoRotation+deg+360)%360;
+ applyPhotoAdjustments();
+}
+function flipPhoto(axis){
+ if(axis==='h')photoFlipH*=-1;
+ else photoFlipV*=-1;
+ applyPhotoAdjustments();
+}
+
+function photoFilter(f){activePhotoFilter=f;applyPhotoAdjustments();}
+function resetPhoto(){
+ ['bright','contrast','saturation'].forEach(id=>$(id).value=100);
+ $('blur').value=0;activePhotoFilter='none';applyPhotoAdjustments();
+}
+function addPhotoText(){
+ const t=$('overlayText').value.trim();
+ if(!t){alert('Write text first.');return;}
+ const box=$('previewBox');
+ let el=$('photoTextOverlay');
+ if(!el){el=document.createElement('div');el.id='photoTextOverlay';el.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:white;font-size:28px;font-weight:bold;text-shadow:2px 2px 5px black;z-index:5;text-align:center;width:90%;pointer-events:none';box.style.position='relative';box.appendChild(el);}
+ el.textContent=t;
+ $('photoStatus').textContent='Text preview added. Save Photo includes adjustments; text overlay export is not yet supported.';
+}
+function downloadPhoto(){
+ const img=$('previewBox').querySelector('img');
+ if(!img){alert('Select a photo first.');return;}
+ const canvas=document.createElement('canvas');
+ const ctx=canvas.getContext('2d');
+ canvas.width=img.naturalWidth;
+ canvas.height=img.naturalHeight;
+ ctx.filter=`brightness(${$('bright').value}%) contrast(${$('contrast').value}%) saturate(${$('saturation').value}%) blur(${$('blur').value}px) ${activePhotoFilter}`;
+ const cropW=Number($('cropWidth')?.value||100)/100;
+ const cropH=Number($('cropHeight')?.value||100)/100;
+ const sw=img.naturalWidth*cropW,sh=img.naturalHeight*cropH;
+ const sx=(img.naturalWidth-sw)/2,sy=(img.naturalHeight-sh)/2;
+ const rotated=Math.abs(photoRotation)%180===90;
+ const outW=rotated?sh:sw,outH=rotated?sw:sh;
+ const output=document.createElement('canvas');
+ output.width=outW;output.height=outH;
+ const out=output.getContext('2d');
+ out.translate(outW/2,outH/2);
+ out.rotate(photoRotation*Math.PI/180);
+ out.scale(photoFlipH,photoFlipV);
+ out.filter=ctx.filter;
+ out.drawImage(img,sx,sy,sw,sh,-sw/2,-sh/2,sw,sh);
+ canvas.width=outW;canvas.height=outH;
+ ctx.filter='none';
+ ctx.drawImage(output,0,0);
+ ctx.filter='none';
+
+ const text=$('overlayText').value.trim();
+ if(text){
+   const size=Math.max(24,Math.round(canvas.width*0.055));
+   ctx.font=`bold ${size}px Arial`;
+   ctx.textAlign='center';
+   ctx.textBaseline='middle';
+   ctx.lineWidth=Math.max(3,size*0.12);
+   ctx.strokeStyle='black';
+   ctx.fillStyle='white';
+   const lines=text.split('\n');
+   const lineHeight=size*1.25;
+   const startY=canvas.height/2-(lines.length-1)*lineHeight/2;
+   lines.forEach((line,i)=>{
+     const y=startY+i*lineHeight;
+     ctx.strokeText(line,canvas.width/2,y);
+     ctx.fillText(line,canvas.width/2,y);
+   });
+ }
+ canvas.toBlob(blob=>{
+   if(!blob){alert('Photo export failed.');return;}
+   const url=URL.createObjectURL(blob);
+   const a=document.createElement('a');
+   a.href=url;
+   a.download='Payal-Edited-Photo.png';
+   a.click();
+   setTimeout(()=>URL.revokeObjectURL(url),3000);
+   $('photoStatus').textContent='Edited photo with text exported.';
+ },'image/png');
+}
+
 </script>
 </body>
 </html>
