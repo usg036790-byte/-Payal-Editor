@@ -1,273 +1,205 @@
 
-header h1{margin:0;color:#ff65a7;font-size:30px}
-header p{color:#aaa;margin-bottom:0}
-nav{display:flex;gap:8px;padding:12px}
-button,.upload{background:#ff65a7;color:#180d16;border:0;border-radius:12px;padding:12px;font-weight:bold;cursor:pointer}
-nav button{flex:1}
-main{padding:14px}
-.panel{background:#1c1c2d;padding:16px;border-radius:17px;margin-bottom:15px}
-h2{font-size:19px}
-input[type=file]{width:100%;margin:12px 0;color:#ddd}
-.preview{width:100%;max-height:350px;object-fit:contain;background:#08080d;border-radius:12px}
-input[type=range]{width:100%;accent-color:#ff65a7}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.controls button{flex:1}
-select{padding:10px;border-radius:9px;background:#303047;color:white}
-small{color:#aaa}
-.hidden{display:none}
-footer{text-align:center;color:#777;padding:20px}
-</style>
-</head>
-<body>
-
-
-
-
-
-
-
-
-
-
-
-kk
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Payal Pro Editor</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>PAYAL PRO MAX</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#101018;color:white;font-family:Arial}
-header{padding:16px;background:#1b1b29;display:flex;justify-content:space-between;align-items:center}
-h1{color:#ff5da8;margin:0;font-size:24px}
-button,.upload{background:#ff5da8;color:#170d15;border:0;padding:11px;border-radius:9px;font-weight:bold;cursor:pointer}
-main{padding:12px;max-width:650px;margin:auto}
-.tabs{display:flex;gap:7px;margin-bottom:12px}
-.tabs button{flex:1}
-.panel{background:#1d1d2b;padding:14px;border-radius:13px;margin-bottom:13px}
-h3{margin:0 0 12px;color:#ff75b6}
-video{width:100%;background:black;border-radius:10px;max-height:300px}
-input[type=file]{width:100%;margin:10px 0}
-input[type=range]{width:100%;accent-color:#ff5da8}
-input[type=text],select{width:100%;padding:12px;border-radius:8px;border:0;margin:7px 0;background:#303044;color:white}
-.controls{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.controls button{flex:1;min-width:80px}
-.timeline{height:65px;background:#303044;border-radius:9px;margin:12px 0;padding:8px;position:relative;overflow:hidden}
-.track{height:42px;background:#ff5da8;border-radius:6px;opacity:.8}
-.small{font-size:12px;color:#aaa}
-.value{color:#ff8cbd}
-.hidden{display:none}
-footer{text-align:center;color:#888;padding:20px;font-size:12px}
+body{margin:0;background:#101016;color:white;font-family:Arial,sans-serif}
+header{height:62px;padding:0 16px;background:#191720;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #302637}
+.logo{font-size:21px;font-weight:900;color:#ff65b0;letter-spacing:1px}
+button{border:0;border-radius:10px;padding:12px;background:#ff65b0;color:#190d17;font-weight:bold;font-size:14px}
+button:active{transform:scale(.96)}
+.page{display:none;padding:15px;max-width:700px;margin:auto}
+.page.active{display:block}
+h2{font-size:23px;margin:18px 0 7px}
+.sub{color:#999;font-size:13px;margin-bottom:20px}
+.choice{background:#211d29;border:1px solid #44334d;border-radius:17px;padding:23px 15px;margin:13px 0;text-align:center}
+.choice .ico{font-size:38px;color:#ff65b0}
+.choice h3{margin:10px 0 5px}
+.choice p{font-size:12px;color:#aaa}
+.primary{width:100%;margin-top:15px;padding:15px}
+.secondary{background:#292331;color:white;border:1px solid #51415a}
+input[type=file]{display:none}
+#previewBox{height:245px;background:#08080c;border-radius:13px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#previewBox video,#previewBox img{width:100%;height:100%;object-fit:contain}
+.preview-empty{text-align:center;color:#aaa}
+.timebar{display:flex;justify-content:space-between;padding:12px 2px;color:#ccc;font-size:12px}
+.timeline{background:#201d27;border-radius:12px;padding:12px;margin:12px 0}
+.track{display:flex;align-items:center;gap:7px;margin:12px 0}
+.trackname{width:65px;font-size:10px;color:#bbb}
+.strip{height:37px;border-radius:6px;flex:1;overflow:hidden;background:#754078}
+.strip.audio{background:#246d60}
+.strip.texttrack{background:#8c652d}
+.strip img{width:100%;height:100%;object-fit:cover}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:16px}
+.tool{background:#211d29;border-radius:12px;padding:13px 3px;text-align:center;color:white;font-size:12px}
+.tool span{display:block;font-size:23px;margin-bottom:7px;color:#ff75b8}
+.tool:active{background:#44304a}
+.export{width:100%;margin:18px 0}
+.small{font-size:11px;color:#999;text-align:center}
 </style>
 </head>
 <body>
+
 <header>
-<h1>✦ PAYAL PRO</h1>
-<button onclick="resetEditor()">Reset</button>
+<div class="logo">✦ PAYAL PRO MAX</div>
+<button onclick="goHome()">Home</button>
 </header>
 
-<main>
-<div class="tabs">
-<button onclick="showTab('video')">Video</button>
-<button onclick="showTab('photo')">Photo</button>
-</div>
+<!-- SCREEN 1 -->
+<section id="home" class="page active">
+<h2>What do you want to create?</h2>
+<p class="sub">Choose your media and start creating.</p>
 
-<section id="video">
-<div class="panel">
-<h3>Video Preview</h3>
-<video id="player" controls playsinline></video>
-<input type="file" id="videoFile" accept="video/*">
-<div class="controls">
-<button onclick="playVideo()">▶ Play</button>
-<button onclick="pauseVideo()">Ⅱ Pause</button>
-<button onclick="muteVideo()">🔇 Mute</button>
-</div>
-</div>
+<label class="choice" for="videoInput" style="display:block">
+<div class="ico">🎬</div>
+<h3>New Video Project</h3>
+<p>Select video from your gallery</p>
+</label>
 
-<div class="panel">
-<h3>✂️ Timeline & Trim</h3>
-<div class="timeline"><div class="track"></div></div>
-<p class="small">Start: <span id="startText" class="value">0.0</span> sec</p>
-<input id="start" type="range" min="0" max="100" value="0">
-<p class="small">End: <span id="endText" class="value">0.0</span> sec</p>
-<input id="end" type="range" min="0" max="100" value="100">
-<div class="controls">
-<button onclick="playTrim()">Preview Trim</button>
-<button onclick="splitVideo()">Split Marker</button>
-</div>
-<p class="small" id="splitInfo">No split marker</p>
-</div>
+<label class="choice" for="photoInput" style="display:block">
+<div class="ico">📸</div>
+<h3>New Photo Project</h3>
+<p>Select a photo to edit</p>
+</label>
 
-<div class="panel">
-<h3>⚡ Speed</h3>
-<select id="speed" onchange="changeSpeed()">
-<option value="0.5">0.5x Slow</option>
-<option value="0.75">0.75x</option>
-<option value="1" selected>1x Normal</option>
-<option value="1.5">1.5x</option>
-<option value="2">2x Fast</option>
-</select>
-</div>
+<input id="videoInput" type="file" accept="video/*">
+<input id="photoInput" type="file" accept="image/*">
 
-<div class="panel">
-<h3>🎵 Music & Audio</h3>
-<input type="file" id="musicFile" accept="audio/*">
-<audio id="music" controls style="width:100%"></audio>
-<label>Music Volume</label>
-<input type="range" id="volume" min="0" max="100" value="70" oninput="changeVolume()">
-</div>
-
-<div class="panel">
-<h3>✍️ Text Overlay</h3>
-<input type="text" id="overlayText" placeholder="Write your text">
-<div class="controls">
-<button onclick="addText()">Add Text</button>
-<button onclick="clearText()">Clear Text</button>
-</div>
-<p id="textPreview" style="color:#ff8cbd;text-align:center"></p>
-</div>
-
-<div class="panel">
-<h3>✨ Video Filters</h3>
-<select id="videoFilter" onchange="applyVideoFilter()">
-<option value="none">Original</option>
-<option value="grayscale(1)">Black & White</option>
-<option value="sepia(1)">Vintage</option>
-<option value="contrast(1.5)">Contrast</option>
-<option value="saturate(1.8)">Vivid</option>
-<option value="brightness(1.2)">Bright</option>
-</select>
-</div>
-
-<div class="panel">
-<h3>🎬 Transitions</h3>
-<select id="transition">
-<option>Fade</option>
-<option>Slide</option>
-<option>Zoom</option>
-<option>None</option>
-</select>
-<p class="small">Transition selection is a preview setting; rendered transitions need the video export engine.</p>
-</div>
-
-<div class="panel">
-<h3>📤 Export</h3>
-<p class="small">Video export engine is not installed yet. Trim and edit previews work in this version.</p>
-<button onclick="exportNotice()">Export Status</button>
-</div>
+<div id="selectedName" class="small">No media selected</div>
+<button class="primary" onclick="continueProject()">CONTINUE →</button>
+<p class="small">PAYAL PRO MAX • Creative Studio</p>
 </section>
 
-<section id="photo" class="hidden">
-<div class="panel">
-<h3>📸 Photo Editor</h3>
-<input type="file" id="photoFile" accept="image/*">
-<canvas id="canvas" style="width:100%;background:#303044;border-radius:10px"></canvas>
-<label>Brightness</label>
-<input type="range" id="bright" min="50" max="150" value="100">
-<label>Contrast</label>
-<input type="range" id="contrast" min="50" max="200" value="100">
-<div class="controls">
-<button onclick="rotatePhoto()">Rotate</button>
-<button onclick="savePhoto()">Save Photo</button>
+<!-- SCREEN 2 -->
+<section id="editor" class="page">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px">
+<button class="secondary" onclick="goHome()">← Back</button>
+<strong>EDITOR</strong>
+<button onclick="exportNotice()">Export</button>
 </div>
-</div>
-</section>
-</main>
 
-<footer>PAYAL PRO EDITOR • Made with love</footer>
+<div id="previewBox">
+<div class="preview-empty">🎬<br>Video Preview</div>
+</div>
+
+<div class="timebar">
+<span id="currentTime">00:00</span>
+<span id="duration">00:00</span>
+</div>
+
+<div style="display:flex;justify-content:center;gap:15px">
+<button class="secondary" onclick="seekBack()">↶ 5s</button>
+<button onclick="playMedia()">▶ / Ⅱ</button>
+<button class="secondary" onclick="seekForward()">5s ↷</button>
+</div>
+
+<div class="timeline">
+<strong style="font-size:13px">MULTI-LAYER TIMELINE</strong>
+<div class="track">
+<div class="trackname">VIDEO</div>
+<div class="strip" id="videoTrack"></div>
+</div>
+<div class="track">
+<div class="trackname">OVERLAY</div>
+<div class="strip" style="background:#435b88"></div>
+</div>
+<div class="track">
+<div class="trackname">AUDIO</div>
+<div class="strip audio"></div>
+</div>
+<div class="track">
+<div class="trackname">TEXT</div>
+<div class="strip texttrack"></div>
+</div>
+<p class="small">Timeline interface preview – editing tools will be connected next.</p>
+</div>
+
+<div class="tools">
+<div class="tool" onclick="toolNotice('Edit / Trim')"><span>✂️</span>Edit</div>
+<div class="tool" onclick="toolNotice('Audio')"><span>🎵</span>Audio</div>
+<div class="tool" onclick="toolNotice('Text')"><span>T</span>Text</div>
+<div class="tool" onclick="toolNotice('Filters')"><span>🎨</span>Filters</div>
+<div class="tool" onclick="toolNotice('Effects')"><span>✨</span>Effects</div>
+<div class="tool" onclick="toolNotice('Layers')"><span>▣</span>Layers</div>
+<div class="tool" onclick="toolNotice('Speed')"><span>⚡</span>Speed</div>
+<div class="tool" onclick="toolNotice('Transitions')"><span>🎞️</span>Transition</div>
+<div class="tool" onclick="toolNotice('Crop')"><span>⛶</span>Crop</div>
+<div class="tool" onclick="toolNotice('Color Grading')"><span>🌈</span>Color</div>
+<div class="tool" onclick="toolNotice('Stickers')"><span>⭐</span>Stickers</div>
+<div class="tool" onclick="toolNotice('AI Tools')"><span>🤖</span>AI Tools</div>
+</div>
+
+<button class="export" onclick="exportNotice()">⬆ EXPORT VIDEO</button>
+</section>
 
 <script>
 const $=id=>document.getElementById(id);
-let videoURL=null,img=new Image(),rotation=0;
+let selectedFile=null,mediaURL=null,mediaType=null;
 
-function showTab(tab){
-$('video').classList.toggle('hidden',tab!=='video');
-$('photo').classList.toggle('hidden',tab!=='photo');
+$('videoInput').addEventListener('change',e=>selectMedia(e,'video'));
+$('photoInput').addEventListener('change',e=>selectMedia(e,'photo'));
+
+function selectMedia(e,type){
+const file=e.target.files[0];
+if(!file)return;
+selectedFile=file;
+mediaType=type;
+$('selectedName').textContent='Selected: '+file.name;
 }
 
-$('videoFile').onchange=e=>{
-const f=e.target.files[0];if(!f)return;
-if(videoURL)URL.revokeObjectURL(videoURL);
-videoURL=URL.createObjectURL(f);
-$('player').src=videoURL;
-$('player').onloadedmetadata=()=>{
-$('start').max=$('player').duration;
-$('end').max=$('player').duration;
-$('end').value=$('player').duration;
-updateTimes();
+function continueProject(){
+if(!selectedFile){alert('Please select a video or photo first.');return;}
+if(mediaURL)URL.revokeObjectURL(mediaURL);
+mediaURL=URL.createObjectURL(selectedFile);
+
+const box=$('previewBox');
+box.innerHTML='';
+
+if(mediaType==='video'){
+const v=document.createElement('video');
+v.src=mediaURL;v.controls=true;v.playsInline=true;
+v.onloadedmetadata=()=>{
+$('duration').textContent=format(v.duration);
 };
+v.ontimeupdate=()=>{
+$('currentTime').textContent=format(v.currentTime);
 };
-
-function playVideo(){$('player').play()}
-function pauseVideo(){$('player').pause()}
-function muteVideo(){$('player').muted=!$('player').muted}
-function changeSpeed(){$('player').playbackRate=Number($('speed').value)}
-
-function updateTimes(){
-$('startText').textContent=Number($('start').value).toFixed(1);
-$('endText').textContent=Number($('end').value).toFixed(1);
+box.appendChild(v);
+}else{
+const img=document.createElement('img');
+img.src=mediaURL;
+box.appendChild(img);
+$('duration').textContent='PHOTO';
 }
-$('start').oninput=updateTimes;
-$('end').oninput=updateTimes;
-
-function playTrim(){
-let p=$('player'),s=Number($('start').value),e=Number($('end').value);
-if(!p.src)return alert('Select video first');
-if(s>=e)return alert('End must be after start');
-p.currentTime=s;p.play();
-let check=()=>{
-if(p.currentTime>=e){p.pause();p.removeEventListener('timeupdate',check)}
-};
-p.addEventListener('timeupdate',check);
+$('videoTrack').textContent=selectedFile.name;
+$('home').classList.remove('active');
+$('editor').classList.add('active');
 }
 
-function splitVideo(){
-let p=$('player');
-if(!p.src)return alert('Select video first');
-$('splitInfo').textContent='Split marker at '+p.currentTime.toFixed(2)+' seconds';
+function format(s){
+if(!Number.isFinite(s))return '00:00';
+return String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0');
 }
-$('musicFile').onchange=e=>{
-let f=e.target.files[0];if(f)$('music').src=URL.createObjectURL(f);
-};
-function changeVolume(){$('music').volume=Number($('volume').value)/100}
-function addText(){$('textPreview').textContent=$('overlayText').value}
-function clearText(){$('textPreview').textContent='';$('overlayText').value=''}
-function applyVideoFilter(){$('player').style.filter=$('videoFilter').value}
-function exportNotice(){alert('Video export engine is the next development step. No video file has been exported yet.')}
-
-$('photoFile').onchange=e=>{
-let f=e.target.files[0];if(!f)return;
-img.onload=drawPhoto;
-img.src=URL.createObjectURL(f);
-};
-function drawPhoto(){
-let c=$('canvas'),ctx=c.getContext('2d');
-let w=img.width,h=img.height;
-c.width=(rotation%180===0)?w:h;
-c.height=(rotation%180===0)?h:w;
-ctx.save();ctx.translate(c.width/2,c.height/2);
-ctx.rotate(rotation*Math.PI/180);
-ctx.filter='brightness('+$('bright').value+'%) contrast('+$('contrast').value+'%)';
-ctx.drawImage(img,-w/2,-h/2,w,h);ctx.restore();
+function getVideo(){return $('previewBox').querySelector('video')}
+function playMedia(){
+const v=getVideo();
+if(v){if(v.paused)v.play();else v.pause();}
 }
-$('bright').oninput=drawPhoto;
-$('contrast').oninput=drawPhoto;
-function rotatePhoto(){rotation=(rotation+90)%360;drawPhoto()}
-function savePhoto(){
-if(!img.src)return alert('Select photo first');
-let a=document.createElement('a');
-a.download='Payal-Edited.png';a.href=$('canvas').toDataURL();
-a.click();
+function seekBack(){const v=getVideo();if(v)v.currentTime=Math.max(0,v.currentTime-5)}
+function seekForward(){const v=getVideo();if(v)v.currentTime=Math.min(v.duration,v.currentTime+5)}
+function goHome(){
+$('editor').classList.remove('active');
+$('home').classList.add('active');
 }
-function resetEditor(){
-if(confirm('Reset editor?'))location.reload();
+function toolNotice(name){
+alert(name+' tool interface will be added in the next development stage.');
+}
+function exportNotice(){
+alert('Video export engine is not connected yet. No video has been exported.');
 }
 </script>
 </body>
